@@ -6,21 +6,23 @@ import asyncio
 import aiohttp
 import os
 
+# Flask app
 app = Flask(__name__)
+
+# Environment variables
+API_ID = os.getenv('23445865')
+API_HASH = os.getenv('350af94c05757b670d2a3825975da0b3')
+SESSION_STRING = os.getenv('BAFlwWkAxE_BmPxHkU6hLf2vSpEHoMzxJq6PIg7BXKXefzbApNY4lqT22UX88XMNngbMFG1utXiqINSi_QtnzQNOI3QNdArOKjIwQRcU2PgCcgcyV9iIUoWgyKAxZRCN7SCpgdau2Q-VbRJKnfTgtJDkqc4Efk8GO9mDR-e-TTRicL-NRNbJs8TU6gkt44Hj9UGojnrTqOGqcP9KdYuo0dh8Sp004eqgmPBnNuoHut2wreOG_n8joQhMYBdmtMT7E9nXiKHvlcaTdspM6DB6BmIvMjW3j37BG6yikQN0QBV8JLhNeXZyptDTWuCyw-a3H-XLkw7VBrTjHxLGPucfx1UIwDroBAAAAAGB25UeAA')
 
 def correct_padding(session_string):
     return session_string + "=" * ((4 - len(session_string) % 4) % 4)
 
-# Replace these values with your actual API ID, API hash, and session string
-API_ID = os.getenv('23445865')
-API_HASH = os.getenv('350af94c05757b670d2a3825975da0b3')
-SESSION_STRING = correct_padding(os.getenv('BAFlwWkAxE_BmPxHkU6hLf2vSpEHoMzxJq6PIg7BXKXefzbApNY4lqT22UX88XMNngbMFG1utXiqINSi_QtnzQNOI3QNdArOKjIwQRcU2PgCcgcyV9iIUoWgyKAxZRCN7SCpgdau2Q-VbRJKnfTgtJDkqc4Efk8GO9mDR-e-TTRicL-NRNbJs8TU6gkt44Hj9UGojnrTqOGqcP9KdYuo0dh8Sp004eqgmPBnNuoHut2wreOG_n8joQhMYBdmtMT7E9nXiKHvlcaTdspM6DB6BmIvMjW3j37BG6yikQN0QBV8JLhNeXZyptDTWuCyw-a3H-XLkw7VBrTjHxLGPucfx1UIwDroBAAAAAGB25UeAA'))
-
+# Initialize Pyrogram client
 client = pyrogram.Client(
     'noob_scrapper',
     api_id=API_ID,
     api_hash=API_HASH,
-    session_string=SESSION_STRING
+    session_string=correct_padding(SESSION_STRING)
 )
 
 BIN_API_URL = 'https://astroboyapi.com/api/bin.php?bin={}'
@@ -70,10 +72,10 @@ async def approved(client_instance, message):
                         f"**𝖡𝖨𝖭** ➠ <b>{brand}, {card_type}, {level}</b>\n\n"
                         f"**𝖡𝖠𝖭𝖪** ➠ <b>{bank}</b>\n\n"
                         f"**𝖢𝖮𝖴𝖭𝖳𝖸** ➠ <b>{country}, {country_flag}</b>\n\n"
-                        "**𝖢𝖱𝖤𝖠𝖳𝖮𝖱** ➠ <b>๏─𝐍𝐎𝐎𝐁─๏</b>"
+                        "**𝖢𝖱𝖤𝖠𝖳𝖮𝖱** ➠ <b>๏─NOOB─๏</b>"
                     )
 
-                    await client_instance.send_message(chat_id='-1002160657679', text=formatted_message)
+                    await client_instance.send_message(chat_id='--1002155602635', text=formatted_message)
     except Exception as e:
         print(f"An error occurred: {e}")
 
@@ -82,13 +84,10 @@ def index():
     return "Bot is running."
 
 @app.before_first_request
-async def start_bot():
-    await client.start()
-
-@app.before_first_request
-def start_flask():
-    client.run()
+def start_bot():
+    loop = asyncio.get_event_loop()
+    loop.create_task(client.start())
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
-  
+    
